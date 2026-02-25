@@ -1,0 +1,46 @@
+INFO:     Started server process [75984]
+INFO:     Waiting for application startup.
+2026-02-25 11:06:40,649 [INFO] app.main: Mnemosine starting up...
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50886 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50895 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50903 - "OPTIONS /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50904 - "OPTIONS /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50907 - "OPTIONS /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50904 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50908 - "OPTIONS /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50907 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50903 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50908 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50908 - "OPTIONS /pages?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50903 - "OPTIONS /work/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50903 - "GET /pages?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50908 - "GET /work/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50908 - "OPTIONS /pages/001_felix_felicianus_antiquarius.jpg/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50903 - "OPTIONS /pages/001_felix_felicianus_antiquarius.jpg/transcription?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50903 - "GET /pages/001_felix_felicianus_antiquarius.jpg/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50908 - "GET /pages/001_felix_felicianus_antiquarius.jpg/transcription?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50992 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50993 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50992 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50995 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50995 - "GET /pages?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50992 - "GET /work/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50992 - "GET /pages/001_felix_felicianus_antiquarius.jpg/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50995 - "GET /pages/001_felix_felicianus_antiquarius.jpg/transcription?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51006 - "PUT /pages/001_felix_felicianus_antiquarius.jpg/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51006 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51016 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51006 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51018 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51018 - "GET /pages?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51006 - "GET /work/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51027 - "GET /pages/001_felix_felicianus_antiquarius.jpg/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51028 - "GET /pages/001_felix_felicianus_antiquarius.jpg/transcription?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51031 - "PUT /pages/001_felix_felicianus_antiquarius.jpg/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51031 - "PUT /work/metadata?manuscript_path=%2FUsers%2Fandreaalessandrelli%2FDesktop%2FMinistero%2Fdata%2Fprova_opera_1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51050 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51051 - "GET /manuscripts/browse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51050 - "GET /models/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "GET /manuscripts/browse HTTP/1.1" 200 OK
