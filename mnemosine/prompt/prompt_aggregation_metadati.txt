@@ -1,0 +1,110 @@
+Riceverai come input un insieme di metadati PER-PAGINA già estratti da un manoscritto.
+Ogni metadato di pagina è un JSON con questa struttura (stesse chiavi):
+- NOTAZIONE_MUSICALE {presenza, tipo, colore_note}
+- PALINSESTO {presenza, tipo}
+- DECORAZIONI {iniziali_semplici, iniziali_filigranate, iniziali_ornate, iniziali_istoriate, pagine_ornate, pagine_illustrate}
+- STATO_DI_CONSERVAZIONE
+- DESCRIZIONE_GENERALE
+- NOMI
+- TITOLO
+- DATAZIONE
+- PRESENZA_SIGILLI_TIMBRI
+- STRUTTURA_MATERIALE
+- LINGUA
+- TIPO_PAGINA
+- NOTE_ESTERNE_AL_TESTO
+- IMPAGINAZIONE
+
+COMPITO
+Produrre un SOLO JSON valido che rappresenti i METADATI AGGREGATI dell’INTERO manoscritto (opera), con la STESSA identica struttura e le stesse chiavi.
+Devi basarti ESCLUSIVAMENTE sui valori presenti nei JSON per-pagina in input. NON usare conoscenza esterna e NON inferire contenuti non presenti.
+
+REGOLE GENERALI (OBBLIGATORIE)
+- Output: SOLO JSON valido (nessun testo prima/dopo).
+- Nessuna chiave extra: la struttura deve essere IDENTICA a quella per-pagina.
+- Se i dati sono insufficienti o conflittuali senza una regola chiara → usa "".
+- Non usare null, true/false, array, commenti o spiegazioni.
+
+REGOLE DI AGGREGAZIONE (DETERMINISTICHE)
+
+A) Campi con valori "SÌ"/"NO"/"":
+(vale per: NOTAZIONE_MUSICALE.presenza, PALINSESTO.presenza, tutti i sotto-campi di DECORAZIONI,
+PRESENZA_SIGILLI_TIMBRI, NOTE_ESTERNE_AL_TESTO)
+
+- Se almeno una pagina ha "SÌ" → aggregato = "SÌ".
+- Altrimenti, se esistono pagine con "NO" e NESSUNA con "SÌ", e almeno una pagina è valorizzata (non tutte "") → aggregato = "NO".
+- Se tutte le pagine hanno "" → aggregato = "".
+
+B) NOTAZIONE_MUSICALE.tipo
+- Compila SOLO se NOTAZIONE_MUSICALE.presenza aggregata = "SÌ".
+- Raccogli tutti i valori non vuoti dalle pagine, normalizza rimuovendo duplicati e unisci con ", " mantenendo solo etichette ammesse.
+- Se nessun tipo determinabile → "".
+
+C) NOTAZIONE_MUSICALE.colore_note
+- Compila SOLO se NOTAZIONE_MUSICALE.presenza aggregata = "SÌ".
+- Se la maggioranza delle pagine valorizzate concorda su un colore → usa quel valore.
+- Se i colori sono troppo variabili o incerti → "".
+- Max 30 caratteri.
+
+D) PALINSESTO.tipo
+- Compila SOLO se PALINSESTO.presenza aggregata = "SÌ".
+- Se tutte le pagine valorizzate concordano su "INTEGRALE" o "PARZIALE" → usa quello.
+- Se conflitto (alcune INTEGRALE e alcune PARZIALE) → "".
+
+E) STATO_DI_CONSERVAZIONE
+- Considera solo valori non vuoti tra: PESSIMO, CATTIVO, DISCRETO, BUONO, OTTIMO.
+- Scegli il valore PIÙ FREQUENTE (moda).
+- In caso di parità tra due o più valori, scegli quello PIÙ CONSERVATIVO (peggiore) tra i pari.
+  Ordine dal peggiore al migliore:
+  PESSIMO < CATTIVO < DISCRETO < BUONO < OTTIMO
+- Se nessun valore → "".
+
+F) IMPAGINAZIONE
+- Se una qualsiasi pagina è "LAYOUT_MISTO" → aggregato = "LAYOUT_MISTO".
+- Altrimenti, se esistono almeno due valori diversi non vuoti tra le pagine → "LAYOUT_MISTO".
+- Altrimenti usa l’unico valore non vuoto presente.
+- Se nessun valore → "".
+
+G) LINGUA
+- Considera solo valori non vuoti.
+- Se una lingua (o coppia di lingue identica) è la più frequente → usa quella.
+- Se emergono chiaramente due lingue principali e compaiono spesso (senza inventare) puoi restituire "Lingua1, Lingua2" SOLO se questa forma appare anche nei metadati per-pagina.
+- Se troppo incerto → "".
+
+H) STRUTTURA_MATERIALE
+- Scegli il valore non vuoto più frequente.
+- Se conflitto senza maggioranza → usa il primo valore non vuoto (in ordine di pagina) SOLO se non esistono alternative equivalenti; altrimenti "".
+
+I) TIPO_PAGINA
+- Se la maggioranza delle pagine non vuote concorda su un tipo → usa quel tipo.
+- Se i tipi sono vari e nessuno prevale chiaramente → "ALTRO".
+- Se nessun valore → "".
+
+J) TITOLO
+- Usa il TITOLO non vuoto più frequente.
+- In caso di parità o varianti molte: scegli il primo titolo non vuoto in ordine di pagina (prima occorrenza).
+- Se nessun titolo → "".
+
+K) DATAZIONE
+- Se esiste un solo valore non vuoto e non ci sono conflitti → usa quello.
+- Se compaiono valori diversi non vuoti → "".
+- Se nessuno → "".
+
+L) NOMI
+- Unisci tutti i NOMI non vuoti:
+  - split per virgola
+  - trim spazi
+  - rimuovi duplicati
+  - conserva l’ordine della prima apparizione
+- Restituisci come stringa unica separata da ", ".
+- Se nessun nome → "".
+
+M) DESCRIZIONE_GENERALE
+- Scrivi 2–4 frasi massimo che sintetizzino l’opera basandoti SOLO su:
+  - descrizioni per-pagina (se presenti)
+  - campi aggregati (decorazioni, layout, lingua, stato, ecc.)
+- NON aggiungere informazioni nuove non presenti nei metadati per-pagina.
+- Se non hai abbastanza elementi → "".
+
+OUTPUT (OBBLIGATORIO)
+Restituisci SOLO il JSON valido con la stessa struttura esatta del metadato per-pagina. Nessun testo extra.
