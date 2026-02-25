@@ -1,0 +1,19 @@
+{
+  "job_id": "5918bede",
+  "manuscript_path": "./data/prova_opera_1",
+  "mode": "both",
+  "granularity": "both",
+  "status": "completed",
+  "progress": 100.0,
+  "total_pages": 4,
+  "processed_pages": 4,
+  "current_step": "Completed",
+  "errors": [],
+  "started_at": "2026-02-24T20:44:54.281842+00:00",
+  "completed_at": "2026-02-24T20:45:32.695042+00:00",
+  "output_paths": {
+    "page_metadati": "./data/prova_opera_1/OUTPUT/page_metadati",
+    "trascrizioni": "./data/prova_opera_1/OUTPUT/Trascrizioni",
+    "metadata_opera": "./data/prova_opera_1/OUTPUT/metadata_opera.txt"
+  }
+}
