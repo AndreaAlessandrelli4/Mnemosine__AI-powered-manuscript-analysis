@@ -1,0 +1,30 @@
+{
+  "NOTAZIONE_MUSICALE": {
+    "presenza": "NO",
+    "tipo": "",
+    "colore_note": ""
+  },
+  "PALINSESTO": {
+    "presenza": "NO",
+    "tipo": ""
+  },
+  "DECORAZIONI": {
+    "iniziali_semplici": "NO",
+    "iniziali_filigranate": "NO",
+    "iniziali_ornate": "NO",
+    "iniziali_istoriate": "NO",
+    "pagine_ornate": "NO",
+    "pagine_illustrate": "NO"
+  },
+  "STATO_DI_CONSERVAZIONE": "BUONO",
+  "DESCRIZIONE_GENERALE": "Manoscritto con scrittura a penna su carta. Presenta annotazioni e una timbratura. Nessuna decorazione visibile.",
+  "NOMI": "Evaristo",
+  "TITOLO": "",
+  "DATAZIONE": "",
+  "PRESENZA_SIGILLI_TIMBRI": "SÌ",
+  "STRUTTURA_MATERIALE": "FASCICOLI LEGATI",
+  "LINGUA": "Italiano",
+  "TIPO_PAGINA": "PAGINA_INTERNA",
+  "NOTE_ESTERNE_AL_TESTO": "SÌ",
+  "IMPAGINAZIONE": "COLONNA_SINGOLA"
+}

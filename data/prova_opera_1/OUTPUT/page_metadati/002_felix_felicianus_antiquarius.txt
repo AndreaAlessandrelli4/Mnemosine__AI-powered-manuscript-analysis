@@ -1,0 +1,30 @@
+{
+  "NOTAZIONE_MUSICALE": {
+    "presenza": "NO",
+    "tipo": "",
+    "colore_note": ""
+  },
+  "PALINSESTO": {
+    "presenza": "NO",
+    "tipo": ""
+  },
+  "DECORAZIONI": {
+    "iniziali_semplici": "NO",
+    "iniziali_filigranate": "NO",
+    "iniziali_ornate": "NO",
+    "iniziali_istoriate": "NO",
+    "pagine_ornate": "NO",
+    "pagine_illustrate": "NO"
+  },
+  "STATO_DI_CONSERVAZIONE": "DISCRETO",
+  "DESCRIZIONE_GENERALE": "Il manoscritto presenta pagine bianche con scrittura in inchiostro chiaro. Sono visibili annotazioni e un timbro bibliotecario.",
+  "NOMI": "",
+  "TITOLO": "",
+  "DATAZIONE": "",
+  "PRESENZA_SIGILLI_TIMBRI": "SÌ",
+  "STRUTTURA_MATERIALE": "FASCICOLI LEGATI",
+  "LINGUA": "",
+  "TIPO_PAGINA": "COPERTINA",
+  "NOTE_ESTERNE_AL_TESTO": "NO",
+  "IMPAGINAZIONE": ""
+}
