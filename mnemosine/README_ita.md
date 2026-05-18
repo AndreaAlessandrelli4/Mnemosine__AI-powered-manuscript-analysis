@@ -11,7 +11,7 @@ Mnemosine estrae metadati strutturati e trascrizioni da scansioni digitalizzate 
 - **Estrazione metadati per pagina** — JSON strutturato con 14 campi (notazione, decorazioni, conservazione, lingua, impaginazione, ecc.)
 - **Trascrizione per pagina** — OCR fedele che preserva grafia originale e layout
 - **Aggregazione a livello di opera** — Regole deterministiche per combinare dati per-pagina
-- **Due provider di inferenza** — Modelli HuggingFace locali (Qwen) o API OpenAI
+- **Multipli provider di inferenza** — Modelli HuggingFace locali (Qwen) o API (OpenAI, Google Gemini, Anthropic Claude, DeepSeek)
 - **Selezione modelli con gating GPU** — Utenti CPU limitati ai modelli piccoli; GPU abilitata per tutti
 - **Gestione intelligente modelli** — Caricamento/scaricamento automatico con pulizia memoria CUDA e MPS
 - **UI per revisione umana** — Modifica metadati e trascrizioni, salva, rigenera aggregati
@@ -41,7 +41,7 @@ cd ..
 
 # Configurazione variabili d'ambiente
 cp .env.example .env
-# Importante: Modifica .env per impostare OPENAI_API_KEY se desideri usare le API OpenAI.
+# Importante: Modifica .env per impostare OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY o DEEPSEEK_API_KEY se desideri usare le API esterne.
 ```
 
 ### 2. Esecuzione dell'Applicazione
@@ -170,28 +170,32 @@ Per personalizzare il comportamento dell'estrazione, modificare questi file. Non
 - **Apple Silicon (MPS):** Tutti i modelli disponibili. Usa `torch.mps.empty_cache()` per la pulizia.
 - **Device "auto":** Rileva automaticamente il migliore (CUDA > MPS > CPU).
 
-## Provider OpenAI
+## Provider API (Esterni)
 
-Quando `INFERENCE_PROVIDER=openai`, Mnemosine utilizza le API OpenAI per l'inferenza:
+Quando `INFERENCE_PROVIDER` è impostato su `openai`, `google`, `claude`, o `deepseek`, Mnemosine utilizza le rispettive API esterne per l'inferenza:
 
-- **Modello vision:** Configurabile via `OPENAI_VISION_MODEL` (default: `gpt-4o-mini`)
-- **Modello text:** Configurabile via `OPENAI_TEXT_MODEL` (default: `gpt-4o-mini`)
-- **Costi:** Temperatura bassa (0.2) e token di output limitati (1200) minimizzano i costi
+- **OpenAI (`openai`)**: Usa `OPENAI_API_KEY`, modelli configurabili via `OPENAI_VISION_MODEL` e `OPENAI_TEXT_MODEL` (default: `gpt-4o-mini`).
+- **Google Gemini (`google`)**: Usa `GOOGLE_API_KEY`, modelli configurabili via `GOOGLE_VISION_MODEL` e `GOOGLE_TEXT_MODEL` (default: `gemini-2.5-flash`).
+- **Anthropic Claude (`claude`)**: Usa `ANTHROPIC_API_KEY`, modelli configurabili via `CLAUDE_VISION_MODEL` e `CLAUDE_TEXT_MODEL` (default: `claude-3-5-haiku-latest`).
+- **DeepSeek (`deepseek`)**: Usa `DEEPSEEK_API_KEY`, modelli configurabili via `DEEPSEEK_VISION_MODEL` e `DEEPSEEK_TEXT_MODEL` (default: `deepseek-chat`).
 
-> ⚠️ **Il provider OpenAI è pensato per demo/test e può generare costi.** Monitorare l'utilizzo nella dashboard OpenAI.
+- **Controllo Costi:** Temperatura bassa (0.2) e token di output limitati (1200) minimizzano i costi per tutte le chiamate API.
+
+> ⚠️ **I provider API sono pensati per demo/test e possono generare costi.** Monitorare l'utilizzo nella dashboard del rispettivo provider.
 
 Tutta la configurazione è nel file `.env` — nessun nome di modello è hardcodato. Vedere `.env.example` per tutte le variabili.
+
+Inoltre nel frontend è stata aggiunta la possibilità di selezionare la cartella del manoscritto tramite **Drag & Drop** (trascinamento) o tramite il menu a tendina. Quando una cartella viene selezionata, la cartella `OUTPUT` viene creata automaticamente se non esiste.
 
 ## Variabili d'Ambiente
 
 | Variabile | Default | Descrizione |
 |-----------|---------|-------------|
-| `INFERENCE_PROVIDER` | `openai` | `hf` (locale) o `openai` (API) |
+| `INFERENCE_PROVIDER` | `openai` | `hf`, `openai`, `google`, `claude`, o `deepseek` |
 | `OPENAI_API_KEY` | — | La tua chiave API OpenAI |
-| `OPENAI_VISION_MODEL` | `gpt-4o-mini` | Modello OpenAI per task vision |
-| `OPENAI_TEXT_MODEL` | `gpt-4o-mini` | Modello OpenAI per task testo |
-| `OPENAI_TEMPERATURE` | `0.2` | Temperatura per la generazione |
-| `OPENAI_MAX_OUTPUT_TOKENS` | `1200` | Max token per risposta |
+| `GOOGLE_API_KEY` | — | La tua chiave API Google |
+| `ANTHROPIC_API_KEY` | — | La tua chiave API Anthropic (Claude) |
+| `DEEPSEEK_API_KEY` | — | La tua chiave API DeepSeek |
 | `MANUSCRIPTS_ROOT` | `./manuscripts` | Directory root dei manoscritti |
 | `PROMPT_DIR` | `../prompt` | Directory contenente i file prompt |
 

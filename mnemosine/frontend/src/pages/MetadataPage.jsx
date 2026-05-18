@@ -7,9 +7,9 @@ export default function MetadataPage() {
     const [catalog, setCatalog] = useState(null)
     const [manuscripts, setManuscripts] = useState([])
     const [msPath, setMsPath] = useState('')
-    const [customPath, setCustomPath] = useState('')
     const [pages, setPages] = useState([])
     const [selectedPage, setSelectedPage] = useState(null)
+    const [isDragging, setIsDragging] = useState(false)
 
     // Config
     const [device, setDevice] = useState('auto')
@@ -62,7 +62,6 @@ export default function MetadataPage() {
         return false
     }
 
-    // ── Browse manuscripts ───────────────────────────────
     const browseMss = useCallback(async (path) => {
         try {
             const data = await api.browse(path || undefined)
@@ -72,15 +71,41 @@ export default function MetadataPage() {
         }
     }, [])
 
+    const handleDragOver = (e) => {
+        e.preventDefault()
+        setIsDragging(true)
+    }
+
+    const handleDragLeave = () => {
+        setIsDragging(false)
+    }
+
+    const handleDrop = (e) => {
+        e.preventDefault()
+        setIsDragging(false)
+        const items = e.dataTransfer.items
+        if (items && items.length > 0) {
+            const item = items[0].webkitGetAsEntry()
+            if (item && item.isDirectory) {
+                const found = manuscripts.find(m => m.name === item.name)
+                if (found) {
+                    setMsPath(found.path)
+                } else {
+                    setError(`Folder "${item.name}" not found in available manuscripts. Did you put it in the data directory?`)
+                }
+            }
+        }
+    }
+
     useEffect(() => { browseMss() }, [browseMss])
 
-    // ── Load pages when manuscript selected ──────────────
     useEffect(() => {
         if (!msPath) {
             setPages([])
             return
         }
-        api.getPages(msPath)
+        api.initManuscript(msPath)
+            .then(() => api.getPages(msPath))
             .then((p) => { setPages(p); setSelectedPage(null) })
             .catch(() => setPages([]))
     }, [msPath])
@@ -119,7 +144,7 @@ export default function MetadataPage() {
         setSaveMsg('')
         try {
             const body = {
-                manuscript_path: msPath || customPath,
+                manuscript_path: msPath,
                 mode,
                 granularity,
                 device,
@@ -236,10 +261,16 @@ export default function MetadataPage() {
                 {/* ── Sidebar ──────────────────────────────── */}
                 <aside className="sidebar">
                     {/* Directory Selection */}
-                    <div className="card" style={{ marginBottom: 16 }}>
+                    <div 
+                        className={`card ${isDragging ? 'dragging' : ''}`} 
+                        style={{ marginBottom: 16, border: isDragging ? '2px dashed var(--mn-primary)' : '' }}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                    >
                         <div className="card-header">
                             <h3>Manuscript</h3>
-                            <p className="text-small">Select or type a manuscript directory</p>
+                            <p className="text-small">Select, type or <strong>drop</strong> a manuscript directory</p>
                         </div>
 
                         <div className="form-group">
@@ -257,16 +288,6 @@ export default function MetadataPage() {
                                 ))}
                             </select>
                         </div>
-
-                        <div className="form-group">
-                            <label>Or enter path</label>
-                            <input
-                                className="form-control"
-                                placeholder="/path/to/manuscript"
-                                value={customPath}
-                                onChange={(e) => { setCustomPath(e.target.value); setMsPath('') }}
-                            />
-                        </div>
                     </div>
 
                     {/* Config */}
@@ -279,6 +300,9 @@ export default function MetadataPage() {
                             <label>Provider</label>
                             <select className="form-control" value={provider} onChange={(e) => setProvider(e.target.value)}>
                                 <option value="openai">OpenAI (API)</option>
+                                <option value="google">Google (Gemini)</option>
+                                <option value="claude">Claude (Anthropic)</option>
+                                <option value="deepseek">DeepSeek (API)</option>
                                 <option value="hf">HuggingFace (local)</option>
                             </select>
                         </div>
@@ -360,7 +384,7 @@ export default function MetadataPage() {
                         className="btn btn-primary"
                         style={{ width: '100%' }}
                         onClick={startAnalysis}
-                        disabled={isRunning || (!msPath && !customPath)}
+                        disabled={isRunning || !msPath}
                     >
                         {isRunning ? 'Running...' : 'Start Analysis'}
                     </button>

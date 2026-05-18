@@ -47,6 +47,15 @@ def create_provider(
     if provider == "openai":
         from .providers.openai_provider import OpenAIProvider
         return OpenAIProvider()
+    elif provider == "google":
+        from .providers.google_provider import GoogleProvider
+        return GoogleProvider()
+    elif provider == "claude":
+        from .providers.anthropic_provider import AnthropicProvider
+        return AnthropicProvider()
+    elif provider == "deepseek":
+        from .providers.deepseek_provider import DeepSeekProvider
+        return DeepSeekProvider()
     else:
         from .providers.hf_provider import HFProvider
         return HFProvider(device=device)

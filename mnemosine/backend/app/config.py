@@ -22,6 +22,9 @@ from pydantic import Field
 class InferenceProvider(str, Enum):
     HF = "hf"
     OPENAI = "openai"
+    GOOGLE = "google"
+    DEEPSEEK = "deepseek"
+    CLAUDE = "claude"
 
 
 class DeviceType(str, Enum):
@@ -73,6 +76,57 @@ class Settings(BaseSettings):
         default=1200,
         alias="OPENAI_MAX_OUTPUT_TOKENS",
         description="Max tokens for OpenAI responses.",
+    )
+
+    # -- Google --
+    google_api_key: str = Field(
+        default="",
+        alias="GOOGLE_API_KEY",
+        description="Google API key.",
+    )
+    google_vision_model: str = Field(
+        default="gemini-2.5-flash",
+        alias="GOOGLE_VISION_MODEL",
+        description="Google model for vision tasks. Fallback: gemini-2.5-flash.",
+    )
+    google_text_model: str = Field(
+        default="gemini-2.5-flash",
+        alias="GOOGLE_TEXT_MODEL",
+        description="Google model for text tasks. Fallback: gemini-2.5-flash.",
+    )
+
+    # -- Claude --
+    anthropic_api_key: str = Field(
+        default="",
+        alias="ANTHROPIC_API_KEY",
+        description="Anthropic API key.",
+    )
+    claude_vision_model: str = Field(
+        default="claude-3-5-haiku-latest",
+        alias="CLAUDE_VISION_MODEL",
+        description="Claude model for vision tasks. Fallback: claude-3-5-haiku-latest.",
+    )
+    claude_text_model: str = Field(
+        default="claude-3-5-haiku-latest",
+        alias="CLAUDE_TEXT_MODEL",
+        description="Claude model for text tasks. Fallback: claude-3-5-haiku-latest.",
+    )
+
+    # -- DeepSeek --
+    deepseek_api_key: str = Field(
+        default="",
+        alias="DEEPSEEK_API_KEY",
+        description="DeepSeek API key.",
+    )
+    deepseek_vision_model: str = Field(
+        default="deepseek-chat",
+        alias="DEEPSEEK_VISION_MODEL",
+        description="DeepSeek model for vision tasks.",
+    )
+    deepseek_text_model: str = Field(
+        default="deepseek-chat",
+        alias="DEEPSEEK_TEXT_MODEL",
+        description="DeepSeek model for text tasks.",
     )
 
     # -- Manuscripts --

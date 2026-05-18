@@ -11,7 +11,7 @@ Mnemosine extracts structured metadata and transcriptions from digitized manuscr
 - **Per-page metadata extraction** — Structured JSON with 14 fields (notation, decorations, conservation, language, layout, etc.)
 - **Per-page transcription** — Faithful OCR preserving original spelling and layout
 - **Work-level aggregation** — Deterministic aggregation rules combining per-page data
-- **Dual inference providers** — Local HuggingFace models (Qwen) or OpenAI API
+- **Multiple inference providers** — Local HuggingFace models (Qwen) or API (OpenAI, Google Gemini, Anthropic Claude, DeepSeek)
 - **GPU-gated model selection** — CPU users are limited to small models; GPU users can access all sizes
 - **Intelligent model management** — Automatic load/unload with CUDA and MPS memory cleanup
 - **Human review UI** — Edit metadata and transcriptions, save changes, regenerate aggregates
@@ -41,7 +41,7 @@ cd ..
 
 # Configure environment variables
 cp .env.example .env
-# Important: Edit .env to set OPENAI_API_KEY if you want to use the OpenAI API.
+# Important: Edit .env to set OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY or DEEPSEEK_API_KEY if you want to use external APIs.
 ```
 
 ### 2. Run the Application
@@ -170,15 +170,18 @@ To customize extraction behavior, edit these files. No code changes needed.
 - **Apple Silicon (MPS):** All models available. Uses `torch.mps.empty_cache()` for cleanup.
 - **Device "auto":** Detects best available (CUDA > MPS > CPU).
 
-## OpenAI Provider
+## API Providers
 
-When `INFERENCE_PROVIDER=openai`, Mnemosine uses the OpenAI API for inference:
+When `INFERENCE_PROVIDER` is set to `openai`, `google`, `claude`, or `deepseek`, Mnemosine uses the respective external API for inference:
 
-- **Vision model:** Configurable via `OPENAI_VISION_MODEL` (default: `gpt-4o-mini`)
-- **Text model:** Configurable via `OPENAI_TEXT_MODEL` (default: `gpt-4o-mini`)
-- **Cost:** Low temperature (0.2) and limited output tokens (1200) minimize costs
+- **OpenAI (`openai`)**: Uses `OPENAI_API_KEY`, models via `OPENAI_VISION_MODEL` and `OPENAI_TEXT_MODEL` (default: `gpt-4o-mini`).
+- **Google Gemini (`google`)**: Uses `GOOGLE_API_KEY`, models via `GOOGLE_VISION_MODEL` and `GOOGLE_TEXT_MODEL` (default: `gemini-2.5-flash`).
+- **Anthropic Claude (`claude`)**: Uses `ANTHROPIC_API_KEY`, models via `CLAUDE_VISION_MODEL` and `CLAUDE_TEXT_MODEL` (default: `claude-3-5-haiku-latest`).
+- **DeepSeek (`deepseek`)**: Uses `DEEPSEEK_API_KEY`, models via `DEEPSEEK_VISION_MODEL` and `DEEPSEEK_TEXT_MODEL` (default: `deepseek-chat`).
 
-> ⚠️ **The OpenAI provider is intended for demo/testing and may incur costs.** Monitor usage in your OpenAI dashboard.
+- **Cost Control:** By default, temperatures are set to `0.2` and output tokens are limited to `1200` to minimize costs.
+
+> ⚠️ **The API providers are intended for demo/testing and may incur costs.** Monitor usage in your respective provider dashboards.
 
 All configuration is in `.env` — no model names are hardcoded. See `.env.example` for all variables.
 
@@ -188,12 +191,11 @@ All configuration is in `.env` — no model names are hardcoded. See `.env.examp
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `INFERENCE_PROVIDER` | `openai` | `hf` (local) or `openai` (API) |
+| `INFERENCE_PROVIDER` | `openai` | `hf`, `openai`, `google`, `claude`, or `deepseek` |
 | `OPENAI_API_KEY` | — | Your OpenAI API key |
-| `OPENAI_VISION_MODEL` | `gpt-4o-mini` | OpenAI model for vision tasks |
-| `OPENAI_TEXT_MODEL` | `gpt-4o-mini` | OpenAI model for text tasks |
-| `OPENAI_TEMPERATURE` | `0.2` | Temperature for generation |
-| `OPENAI_MAX_OUTPUT_TOKENS` | `1200` | Max tokens per response |
+| `GOOGLE_API_KEY` | — | Your Google API key |
+| `ANTHROPIC_API_KEY` | — | Your Anthropic (Claude) API key |
+| `DEEPSEEK_API_KEY` | — | Your DeepSeek API key |
 | `MANUSCRIPTS_ROOT` | `./manuscripts` | Root directory for manuscripts |
 | `PROMPT_DIR` | `../prompt` | Directory containing prompt files |
 

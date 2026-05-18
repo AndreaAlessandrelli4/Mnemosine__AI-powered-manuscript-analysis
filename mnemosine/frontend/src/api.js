@@ -36,6 +36,9 @@ export const api = {
     browse: (path) =>
         request(`/manuscripts/browse${path ? `?path=${encodeURIComponent(path)}` : ''}`),
 
+    initManuscript: (msPath) =>
+        request(`/manuscripts/init?manuscript_path=${encodeURIComponent(msPath)}`, { method: 'POST' }),
+
     getPages: (msPath) =>
         request(`/pages?manuscript_path=${encodeURIComponent(msPath)}`),
 

@@ -1,0 +1,21 @@
+import sys
+import os
+import asyncio
+from app.services.pipeline import run_pipeline
+
+ms_path = os.path.abspath("../../data/Bologna_FrammentiManoscritti_BustaIX")
+
+try:
+    print(f"Starting extraction for {ms_path} using openai provider...")
+    output = run_pipeline(
+        manuscript_path=ms_path,
+        mode="both",
+        granularity="both",
+        device="auto",
+        provider="openai"
+    )
+    print("Pipeline finished successfully!")
+    print("Outputs:", output)
+except Exception as e:
+    print(f"Error during extraction: {e}")
+    sys.exit(1)

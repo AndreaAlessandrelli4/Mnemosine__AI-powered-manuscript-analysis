@@ -81,6 +81,23 @@ async def browse_manuscripts(path: Optional[str] = Query(None)):
     return {"manuscripts": results, "current_path": str(root)}
 
 
+@router.post("/manuscripts/init")
+async def init_manuscript(manuscript_path: str = Query(...)):
+    """Initialize manuscript structure by creating OUTPUT directory if it doesn't exist."""
+    ms_path = Path(manuscript_path).resolve()
+    if not ms_path.is_dir():
+        raise HTTPException(404, f"Manuscript directory not found: {ms_path}")
+    
+    images_dir = ms_path / "Immagini"
+    if not images_dir.is_dir():
+        raise HTTPException(404, f"Immagini directory not found in {ms_path}")
+
+    output_dir = ms_path / "OUTPUT"
+    output_dir.mkdir(exist_ok=True)
+    
+    return {"initialized": True, "path": str(ms_path)}
+
+
 # ── Pages ─────────────────────────────────────────────
 
 @router.get("/pages", response_model=List[PageInfo])
