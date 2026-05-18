@@ -31,6 +31,7 @@ export const api = {
 
     getJobStatus: (jobId) => request(`/jobs/${jobId}/status`),
     getJobResults: (jobId) => request(`/jobs/${jobId}/results`),
+    cancelJob: (jobId) => request(`/jobs/${jobId}/cancel`, { method: 'POST' }),
 
     // Manuscripts
     browse: (path) =>

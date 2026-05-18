@@ -37,7 +37,7 @@ class AnalyzeRequest(BaseModel):
     mode: str = Field(default="both", pattern="^(metadata|transcription|both)$")
     granularity: str = Field(default="both", pattern="^(page|work|both)$")
     device: str = Field(default="auto", pattern="^(auto|cpu|cuda|mps)$")
-    provider: str = Field(default="openai", pattern="^(hf|openai)$")
+    provider: str = Field(default="openai", pattern="^(hf|openai|google|claude|qwen)$")
     models: ModelsSelection = Field(default_factory=ModelsSelection)
 
 
@@ -142,8 +142,20 @@ async def job_results(job_id: str):
     job = JobManager.get_job(job_id)
     if job is None:
         raise HTTPException(404, f"Job not found: {job_id}")
-    if job.status.value not in ("completed", "failed"):
+    if job.status.value not in ("completed", "failed", "cancelled"):
         raise HTTPException(
             202, detail={"message": "Job still in progress", "status": job.status.value}
         )
     return job.to_dict()
+
+
+@router.post("/jobs/{job_id}/cancel")
+async def cancel_job(job_id: str):
+    """Cancel a running job."""
+    job = JobManager.get_job(job_id)
+    if job is None:
+        raise HTTPException(404, f"Job not found: {job_id}")
+    if JobManager.cancel_job(job_id):
+        return {"message": "Job cancelled successfully"}
+    else:
+        raise HTTPException(400, "Job cannot be cancelled (it may already be completed or failed)")

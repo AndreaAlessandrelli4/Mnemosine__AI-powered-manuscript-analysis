@@ -1,5 +1,5 @@
 """
-DeepSeek inference provider (OpenAI compatible).
+Qwen inference provider (OpenAI compatible via DashScope).
 """
 
 from __future__ import annotations
@@ -15,21 +15,21 @@ from ...config import get_settings
 logger = logging.getLogger(__name__)
 
 
-class DeepSeekProvider(InferenceProvider):
-    """DeepSeek API inference using OpenAI SDK."""
+class QwenProvider(InferenceProvider):
+    """Qwen API inference using OpenAI SDK via Alibaba DashScope."""
 
     def __init__(self):
         settings = get_settings()
-        self._api_key = settings.deepseek_api_key
-        self._base_url = "https://api.deepseek.com"
-        self._vision_model = settings.deepseek_vision_model or "deepseek-chat"
-        self._text_model = settings.deepseek_text_model or "deepseek-chat"
+        self._api_key = settings.qwen_api_key
+        self._base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        self._vision_model = settings.qwen_vision_model or "qwen-vl-plus"
+        self._text_model = settings.qwen_text_model or "qwen-plus"
         self._temperature = settings.openai_temperature
         self._max_tokens = settings.openai_max_output_tokens
 
         if not self._api_key or self._api_key == "your_key_here":
             raise ValueError(
-                "DEEPSEEK_API_KEY is not set. Configure it in your .env file."
+                "QWEN_API_KEY is not set. Configure it in your .env file."
             )
 
     def _get_client(self):
@@ -39,13 +39,13 @@ class DeepSeekProvider(InferenceProvider):
 
     def run_vl(self, image_path: str | Path, prompt_text: str) -> str:
         """
-        Vision-language inference via DeepSeek.
+        Vision-language inference via Qwen.
         """
         client = self._get_client()
         b64_image = image_to_base64(image_path)
 
         logger.info(
-            "DeepSeek VL call: model=%s, image=%s",
+            "Qwen VL call: model=%s, image=%s",
             self._vision_model,
             Path(image_path).name,
         )
@@ -75,16 +75,16 @@ class DeepSeekProvider(InferenceProvider):
             )
             return response.choices[0].message.content or ""
         except Exception as e:
-            logger.error("DeepSeek VL error: %s", e)
-            raise ConnectionError(f"DeepSeek API failed: {e}")
+            logger.error("Qwen VL error: %s", e)
+            raise ConnectionError(f"Qwen API failed: {e}")
 
     def run_text(self, prompt_text: str, user_text: str) -> str:
         """
-        Text-only inference via DeepSeek.
+        Text-only inference via Qwen.
         """
         client = self._get_client()
 
-        logger.info("DeepSeek text call: model=%s", self._text_model)
+        logger.info("Qwen text call: model=%s", self._text_model)
 
         try:
             response = client.chat.completions.create(
@@ -98,5 +98,5 @@ class DeepSeekProvider(InferenceProvider):
             )
             return response.choices[0].message.content or ""
         except Exception as e:
-            logger.error("DeepSeek text error: %s", e)
-            raise ConnectionError(f"DeepSeek API failed: {e}")
+            logger.error("Qwen text error: %s", e)
+            raise ConnectionError(f"Qwen API failed: {e}")

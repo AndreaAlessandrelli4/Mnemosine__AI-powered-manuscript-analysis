@@ -23,7 +23,7 @@ class InferenceProvider(str, Enum):
     HF = "hf"
     OPENAI = "openai"
     GOOGLE = "google"
-    DEEPSEEK = "deepseek"
+    QWEN = "qwen"
     CLAUDE = "claude"
 
 
@@ -112,21 +112,21 @@ class Settings(BaseSettings):
         description="Claude model for text tasks. Fallback: claude-3-5-haiku-latest.",
     )
 
-    # -- DeepSeek --
-    deepseek_api_key: str = Field(
+    # -- Qwen (Alibaba DashScope) --
+    qwen_api_key: str = Field(
         default="",
-        alias="DEEPSEEK_API_KEY",
-        description="DeepSeek API key.",
+        alias="QWEN_API_KEY",
+        description="Qwen API key (DashScope).",
     )
-    deepseek_vision_model: str = Field(
-        default="deepseek-chat",
-        alias="DEEPSEEK_VISION_MODEL",
-        description="DeepSeek model for vision tasks.",
+    qwen_vision_model: str = Field(
+        default="qwen-vl-plus",
+        alias="QWEN_VISION_MODEL",
+        description="Qwen model for vision tasks.",
     )
-    deepseek_text_model: str = Field(
-        default="deepseek-chat",
-        alias="DEEPSEEK_TEXT_MODEL",
-        description="DeepSeek model for text tasks.",
+    qwen_text_model: str = Field(
+        default="qwen-plus",
+        alias="QWEN_TEXT_MODEL",
+        description="Qwen model for text tasks.",
     )
 
     # -- Manuscripts --

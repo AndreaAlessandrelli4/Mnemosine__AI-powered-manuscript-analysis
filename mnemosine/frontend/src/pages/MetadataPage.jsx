@@ -164,13 +164,26 @@ export default function MetadataPage() {
         }
     }
 
+    const handleCancel = async () => {
+        if (!jobId) return;
+        try {
+            await api.cancelJob(jobId);
+            // We do not set isRunning to false here; the polling loop will detect 
+            // the status change to 'cancelled' and stop.
+            setSaveMsg('Job cancellation requested...');
+            setTimeout(() => setSaveMsg(''), 3000);
+        } catch (e) {
+            setError(`Failed to cancel job: ${e.message}`);
+        }
+    }
+
     const startPolling = (id) => {
         if (pollRef.current) clearInterval(pollRef.current)
         pollRef.current = setInterval(async () => {
             try {
                 const s = await api.getJobStatus(id)
                 setJobStatus(s)
-                if (s.status === 'completed' || s.status === 'failed') {
+                if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
                     clearInterval(pollRef.current)
                     pollRef.current = null
                     setIsRunning(false)
@@ -302,7 +315,7 @@ export default function MetadataPage() {
                                 <option value="openai">OpenAI (API)</option>
                                 <option value="google">Google (Gemini)</option>
                                 <option value="claude">Claude (Anthropic)</option>
-                                <option value="deepseek">DeepSeek (API)</option>
+                                <option value="qwen">Qwen (API)</option>
                                 <option value="hf">HuggingFace (local)</option>
                             </select>
                         </div>
@@ -380,14 +393,25 @@ export default function MetadataPage() {
                     )}
 
                     {/* Launch */}
-                    <button
-                        className="btn btn-primary"
-                        style={{ width: '100%' }}
-                        onClick={startAnalysis}
-                        disabled={isRunning || !msPath}
-                    >
-                        {isRunning ? 'Running...' : 'Start Analysis'}
-                    </button>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                        <button
+                            className="btn btn-primary"
+                            style={{ flex: 1 }}
+                            onClick={startAnalysis}
+                            disabled={isRunning || !msPath}
+                        >
+                            {isRunning ? 'Running...' : 'Start Analysis'}
+                        </button>
+                        {isRunning && (
+                            <button
+                                className="btn"
+                                style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none' }}
+                                onClick={handleCancel}
+                            >
+                                Cancel
+                            </button>
+                        )}
+                    </div>
                 </aside>
 
                 {/* ── Main Panel ──────────────────────────── */}

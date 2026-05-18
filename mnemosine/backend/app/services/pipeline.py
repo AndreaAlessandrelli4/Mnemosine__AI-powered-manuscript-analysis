@@ -28,7 +28,7 @@ from .prompt_loader import (
     get_metadata_prompt,
     get_transcription_prompt,
 )
-from .job_manager import JobManager
+from .job_manager import JobManager, JobStatus
 from .providers.base import InferenceProvider
 from ..config import get_settings, InferenceProvider as ProviderEnum, resolve_device, DeviceType
 from ..models_catalog import is_model_allowed
@@ -53,9 +53,9 @@ def create_provider(
     elif provider == "claude":
         from .providers.anthropic_provider import AnthropicProvider
         return AnthropicProvider()
-    elif provider == "deepseek":
-        from .providers.deepseek_provider import DeepSeekProvider
-        return DeepSeekProvider()
+    elif provider == "qwen":
+        from .providers.qwen_provider import QwenProvider
+        return QwenProvider()
     else:
         from .providers.hf_provider import HFProvider
         return HFProvider(device=device)
@@ -169,12 +169,23 @@ def _run_pipeline_internal(
 
         for i, (page_num, filename) in enumerate(images):
             if job_id:
+                job = JobManager.get_job(job_id)
+                if job and job.status == JobStatus.CANCELLED:
+                    raise InterruptedError("Job cancelled by user")
+                
                 JobManager.update_progress(
                     job_id, i, total_pages * (2 if do_transcription else 1),
                     f"Extracting metadata: page {page_num} ({filename})",
                 )
 
             image_path = images_dir / filename
+            out_name = Path(filename).stem + ".txt"
+            out_path = meta_dir / out_name
+            
+            if out_path.exists():
+                logger.info("Metadata for %s already exists, skipping.", filename)
+                continue
+
             try:
                 if is_hf:
                     raw = inf_provider.run_vl(image_path, metadata_prompt, model_id=vl_model)
@@ -191,8 +202,6 @@ def _run_pipeline_internal(
                         JobManager.add_error(job_id, f"JSON repair failed: {filename}")
 
                 # Save
-                out_name = Path(filename).stem + ".txt"
-                out_path = meta_dir / out_name
                 out_path.write_text(json_str, encoding="utf-8")
                 logger.info("Saved metadata: %s", out_path.name)
 
@@ -213,12 +222,23 @@ def _run_pipeline_internal(
 
         for i, (page_num, filename) in enumerate(images):
             if job_id:
+                job = JobManager.get_job(job_id)
+                if job and job.status == JobStatus.CANCELLED:
+                    raise InterruptedError("Job cancelled by user")
+
                 JobManager.update_progress(
                     job_id, offset + i, total_pages * (2 if do_metadata else 1),
                     f"Transcribing: page {page_num} ({filename})",
                 )
 
             image_path = images_dir / filename
+            out_name = Path(filename).stem + ".txt"
+            out_path = trasc_dir / out_name
+            
+            if out_path.exists():
+                logger.info("Transcription for %s already exists, skipping.", filename)
+                continue
+
             try:
                 if is_hf:
                     raw = inf_provider.run_vl(image_path, transcription_prompt, model_id=vl_model)
@@ -226,8 +246,6 @@ def _run_pipeline_internal(
                     raw = inf_provider.run_vl(image_path, transcription_prompt)
 
                 # Save plain text
-                out_name = Path(filename).stem + ".txt"
-                out_path = trasc_dir / out_name
                 out_path.write_text(raw.strip(), encoding="utf-8")
                 logger.info("Saved transcription: %s", out_path.name)
 

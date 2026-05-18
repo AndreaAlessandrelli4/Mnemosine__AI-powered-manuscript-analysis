@@ -23,6 +23,7 @@ class JobStatus(str, Enum):
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
+    CANCELLED = "cancelled"
 
 
 class JobInfo:
@@ -137,6 +138,16 @@ class JobManager:
             job.errors.append(error)
             job.completed_at = datetime.now(timezone.utc).isoformat()
             cls._persist_status(job)
+
+    @classmethod
+    def cancel_job(cls, job_id: str) -> bool:
+        job = cls.get_job(job_id)
+        if job and job.status in (JobStatus.PENDING, JobStatus.RUNNING):
+            job.status = JobStatus.CANCELLED
+            job.completed_at = datetime.now(timezone.utc).isoformat()
+            cls._persist_status(job)
+            return True
+        return False
 
     @classmethod
     def add_error(cls, job_id: str, error: str) -> None:

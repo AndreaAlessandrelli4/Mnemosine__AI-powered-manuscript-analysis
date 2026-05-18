@@ -11,7 +11,7 @@ Mnemosine estrae metadati strutturati e trascrizioni da scansioni digitalizzate 
 - **Estrazione metadati per pagina** — JSON strutturato con 14 campi (notazione, decorazioni, conservazione, lingua, impaginazione, ecc.)
 - **Trascrizione per pagina** — OCR fedele che preserva grafia originale e layout
 - **Aggregazione a livello di opera** — Regole deterministiche per combinare dati per-pagina
-- **Multipli provider di inferenza** — Modelli HuggingFace locali (Qwen) o API (OpenAI, Google Gemini, Anthropic Claude, DeepSeek)
+- **Multipli provider di inferenza** — Modelli HuggingFace locali (Qwen) o API (OpenAI, Google Gemini, Anthropic Claude, Qwen API)
 - **Selezione modelli con gating GPU** — Utenti CPU limitati ai modelli piccoli; GPU abilitata per tutti
 - **Gestione intelligente modelli** — Caricamento/scaricamento automatico con pulizia memoria CUDA e MPS
 - **UI per revisione umana** — Modifica metadati e trascrizioni, salva, rigenera aggregati
@@ -41,7 +41,7 @@ cd ..
 
 # Configurazione variabili d'ambiente
 cp .env.example .env
-# Importante: Modifica .env per impostare OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY o DEEPSEEK_API_KEY se desideri usare le API esterne.
+# Importante: Modifica .env per impostare OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY o QWEN_API_KEY se desideri usare le API esterne.
 ```
 
 ### 2. Esecuzione dell'Applicazione
@@ -172,12 +172,12 @@ Per personalizzare il comportamento dell'estrazione, modificare questi file. Non
 
 ## Provider API (Esterni)
 
-Quando `INFERENCE_PROVIDER` è impostato su `openai`, `google`, `claude`, o `deepseek`, Mnemosine utilizza le rispettive API esterne per l'inferenza:
+Quando `INFERENCE_PROVIDER` è impostato su `openai`, `google`, `claude`, o `qwen`, Mnemosine utilizza le rispettive API esterne per l'inferenza:
 
 - **OpenAI (`openai`)**: Usa `OPENAI_API_KEY`, modelli configurabili via `OPENAI_VISION_MODEL` e `OPENAI_TEXT_MODEL` (default: `gpt-4o-mini`).
 - **Google Gemini (`google`)**: Usa `GOOGLE_API_KEY`, modelli configurabili via `GOOGLE_VISION_MODEL` e `GOOGLE_TEXT_MODEL` (default: `gemini-2.5-flash`).
 - **Anthropic Claude (`claude`)**: Usa `ANTHROPIC_API_KEY`, modelli configurabili via `CLAUDE_VISION_MODEL` e `CLAUDE_TEXT_MODEL` (default: `claude-3-5-haiku-latest`).
-- **DeepSeek (`deepseek`)**: Usa `DEEPSEEK_API_KEY`, modelli configurabili via `DEEPSEEK_VISION_MODEL` e `DEEPSEEK_TEXT_MODEL` (default: `deepseek-chat`).
+- **Qwen (`qwen`)**: Usa `QWEN_API_KEY` (tramite DashScope), modelli configurabili via `QWEN_VISION_MODEL` (default: `qwen-vl-plus`) e `QWEN_TEXT_MODEL` (default: `qwen-plus`).
 
 - **Controllo Costi:** Temperatura bassa (0.2) e token di output limitati (1200) minimizzano i costi per tutte le chiamate API.
 
@@ -191,11 +191,11 @@ Inoltre nel frontend è stata aggiunta la possibilità di selezionare la cartell
 
 | Variabile | Default | Descrizione |
 |-----------|---------|-------------|
-| `INFERENCE_PROVIDER` | `openai` | `hf`, `openai`, `google`, `claude`, o `deepseek` |
+| `INFERENCE_PROVIDER` | `openai` | `hf`, `openai`, `google`, `claude`, o `qwen` |
 | `OPENAI_API_KEY` | — | La tua chiave API OpenAI |
 | `GOOGLE_API_KEY` | — | La tua chiave API Google |
 | `ANTHROPIC_API_KEY` | — | La tua chiave API Anthropic (Claude) |
-| `DEEPSEEK_API_KEY` | — | La tua chiave API DeepSeek |
+| `QWEN_API_KEY` | — | La tua chiave API Qwen DashScope |
 | `MANUSCRIPTS_ROOT` | `./manuscripts` | Directory root dei manoscritti |
 | `PROMPT_DIR` | `../prompt` | Directory contenente i file prompt |
 

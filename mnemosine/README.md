@@ -11,7 +11,7 @@ Mnemosine extracts structured metadata and transcriptions from digitized manuscr
 - **Per-page metadata extraction** — Structured JSON with 14 fields (notation, decorations, conservation, language, layout, etc.)
 - **Per-page transcription** — Faithful OCR preserving original spelling and layout
 - **Work-level aggregation** — Deterministic aggregation rules combining per-page data
-- **Multiple inference providers** — Local HuggingFace models (Qwen) or API (OpenAI, Google Gemini, Anthropic Claude, DeepSeek)
+- **Multiple inference providers** — Local HuggingFace models (Qwen) or API (OpenAI, Google Gemini, Anthropic Claude, Qwen API)
 - **GPU-gated model selection** — CPU users are limited to small models; GPU users can access all sizes
 - **Intelligent model management** — Automatic load/unload with CUDA and MPS memory cleanup
 - **Human review UI** — Edit metadata and transcriptions, save changes, regenerate aggregates
@@ -41,7 +41,7 @@ cd ..
 
 # Configure environment variables
 cp .env.example .env
-# Important: Edit .env to set OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY or DEEPSEEK_API_KEY if you want to use external APIs.
+# Important: Edit .env to set OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY or QWEN_API_KEY if you want to use external APIs.
 ```
 
 ### 2. Run the Application
@@ -172,12 +172,12 @@ To customize extraction behavior, edit these files. No code changes needed.
 
 ## API Providers
 
-When `INFERENCE_PROVIDER` is set to `openai`, `google`, `claude`, or `deepseek`, Mnemosine uses the respective external API for inference:
+When `INFERENCE_PROVIDER` is set to `openai`, `google`, `claude`, or `qwen`, Mnemosine uses the respective external API for inference:
 
 - **OpenAI (`openai`)**: Uses `OPENAI_API_KEY`, models via `OPENAI_VISION_MODEL` and `OPENAI_TEXT_MODEL` (default: `gpt-4o-mini`).
 - **Google Gemini (`google`)**: Uses `GOOGLE_API_KEY`, models via `GOOGLE_VISION_MODEL` and `GOOGLE_TEXT_MODEL` (default: `gemini-2.5-flash`).
 - **Anthropic Claude (`claude`)**: Uses `ANTHROPIC_API_KEY`, models via `CLAUDE_VISION_MODEL` and `CLAUDE_TEXT_MODEL` (default: `claude-3-5-haiku-latest`).
-- **DeepSeek (`deepseek`)**: Uses `DEEPSEEK_API_KEY`, models via `DEEPSEEK_VISION_MODEL` and `DEEPSEEK_TEXT_MODEL` (default: `deepseek-chat`).
+- **Qwen (`qwen`)**: Uses `QWEN_API_KEY` (via DashScope), models via `QWEN_VISION_MODEL` (default: `qwen-vl-plus`) and `QWEN_TEXT_MODEL` (default: `qwen-plus`).
 
 - **Cost Control:** By default, temperatures are set to `0.2` and output tokens are limited to `1200` to minimize costs.
 
@@ -191,11 +191,11 @@ All configuration is in `.env` — no model names are hardcoded. See `.env.examp
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `INFERENCE_PROVIDER` | `openai` | `hf`, `openai`, `google`, `claude`, or `deepseek` |
+| `INFERENCE_PROVIDER` | `openai` | `hf`, `openai`, `google`, `claude`, or `qwen` |
 | `OPENAI_API_KEY` | — | Your OpenAI API key |
 | `GOOGLE_API_KEY` | — | Your Google API key |
 | `ANTHROPIC_API_KEY` | — | Your Anthropic (Claude) API key |
-| `DEEPSEEK_API_KEY` | — | Your DeepSeek API key |
+| `QWEN_API_KEY` | — | Your Qwen DashScope API key |
 | `MANUSCRIPTS_ROOT` | `./manuscripts` | Root directory for manuscripts |
 | `PROMPT_DIR` | `../prompt` | Directory containing prompt files |
 
