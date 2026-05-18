@@ -113,6 +113,8 @@ async def analyze(req: AnalyzeRequest):
         except Exception as exc:
             logger.error("Pipeline failed for job %s: %s", job.job_id, exc)
             JobManager.mark_failed(job.job_id, str(exc))
+        finally:
+            JobManager.release_run_lock()
 
     # Try to acquire the global run lock
     if not JobManager.acquire_run_lock():

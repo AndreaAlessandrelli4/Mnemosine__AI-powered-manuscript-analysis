@@ -1,0 +1,30 @@
+{
+  "NOTAZIONE_MUSICALE": {
+    "presenza": "NO",
+    "tipo": "",
+    "colore_note": ""
+  },
+  "PALINSESTO": {
+    "presenza": "NO",
+    "tipo": ""
+  },
+  "DECORAZIONI": {
+    "iniziali_semplici": "NO",
+    "iniziali_filigranate": "NO",
+    "iniziali_ornate": "NO",
+    "iniziali_istoriate": "NO",
+    "pagine_ornate": "NO",
+    "pagine_illustrate": "NO"
+  },
+  "STATO_DI_CONSERVAZIONE": "DISCRETO",
+  "DESCRIZIONE_GENERALE": "Manoscritto su carta con scrittura a inchiostro scuro. Presenta alcune macchie e usura ai bordi.",
+  "NOMI": "",
+  "TITOLO": "",
+  "DATAZIONE": "",
+  "PRESENZA_SIGILLI_TIMBRI": "NO",
+  "STRUTTURA_MATERIALE": "FASCICOLI LEGATI",
+  "LINGUA": "Italiano",
+  "TIPO_PAGINA": "PAGINA_INTERNA",
+  "NOTE_ESTERNE_AL_TESTO": "NO",
+  "IMPAGINAZIONE": "COLONNA_SINGOLA"
+}
